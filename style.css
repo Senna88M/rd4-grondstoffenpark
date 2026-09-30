@@ -1,0 +1,1537 @@
+/* Huisstijl naar rd4.nl: navy balk, Bree Serif koppen, geel accent, lichtgrijze achtergrond. */
+:root {
+    --navy: #04172d;
+    --primary: #0a366a;
+    --lichtblauw: #8bacd2;
+    --geel: #f9f91d;
+    --link: #114dc9;
+    --bg: #ebeff3;
+    --card: #f1f5fe;
+    --surface: #ffffff;
+    --ink: #04172d;
+    --ink-2: #3d4f66;
+    --muted: #6b7a8f;
+    --line: #dbe2ea;
+    --kop: "Bree Serif", Georgia, serif;
+    /* voertuigtypes */
+    --v1: #114dc9;
+    --v2: #019c90;
+    --v3: #b3b300;
+    --v4: #8b5fd1;
+}
+
+/* Donker thema (volgt de browser, of de knop rechtsboven) */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --primary: #8bacd2;
+    --link: #5b8ff0;
+    --bg: #0d1826;
+    --card: #1a2a3d;
+    --surface: #132131;
+    --ink: #e4ebf3;
+    --ink-2: #b3c1d1;
+    --muted: #8697ab;
+    --line: #26384d;
+    --v1: #5b8ff0;
+    --v2: #22b8aa;
+    --v3: #c4c42a;
+    --v4: #a488e6;
+}
+
+/* touch-action: niet inzoomen met dubbeltikken (de kaart zoomt zelf); knijpen staat uit in de viewport en voor iOS in script.js. */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    touch-action: manipulation;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* Navy achter alles: iOS Safari 26 negeert theme-color en kleurt de statusbalk/notch
+   naar de achtergrond aan de rand van de pagina. De inhoud heeft zijn eigen achtergrond. */
+html,
+body {
+    background: var(--navy);
+}
+
+body {
+    font: 15px/1.45 Figtree, system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+/* ---------- Bovenbalk ---------- */
+
+/* Loopt door onder de notch/statusbalk (viewport-fit=cover); de safe-area-padding houdt de inhoud vrij. */
+.topbar {
+    --rand: 24px;
+    position: sticky; /* Safari gebruikt een vaste kop bovenaan voor de kleur van de statusbalk */
+    top: 0;
+    z-index: 2;
+    flex: none;
+    height: calc(60px + env(safe-area-inset-top));
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: env(safe-area-inset-top) max(var(--rand), env(safe-area-inset-right)) 0 max(var(--rand), env(safe-area-inset-left));
+    background: var(--navy);
+    color: #fff;
+}
+
+/* Logo en naam: naar het park op Google Maps */
+.merk {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.merk:hover .titel {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.merk:focus-visible {
+    outline: 2px solid var(--geel);
+    outline-offset: 4px;
+}
+
+.topbar img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.topbar .titel {
+    font-family: var(--kop);
+    font-size: 19px;
+}
+
+.tabs {
+    display: flex;
+    gap: 28px;
+    height: 100%;
+    margin-left: 40px;
+}
+
+.tabs button {
+    position: relative;
+    color: var(--lichtblauw);
+    font-size: 15px;
+}
+
+.tabs button:hover {
+    color: #fff;
+}
+
+.tabs button[aria-selected="true"] {
+    color: #fff;
+    font-weight: 600;
+}
+
+.tabs button[aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-bottom-color: var(--surface);
+}
+
+#thema {
+    margin-left: auto;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: var(--lichtblauw);
+}
+
+#thema:hover {
+    color: #fff;
+}
+
+#thema svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#thema[aria-pressed="true"] .maan,
+#thema[aria-pressed="false"] .zon {
+    display: none;
+}
+
+/* ---------- Gedeeld: kpi's, pills, balken ---------- */
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 8px;
+}
+
+.kpi {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.kpi b {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.kpi span {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+.pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pills button {
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.pills button[aria-pressed="true"] {
+    background: var(--primary);
+    color: var(--surface);
+}
+
+.bar {
+    position: relative;
+    height: 8px;
+}
+
+.bar i {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+    background: var(--link);
+    border-radius: 0 4px 4px 0;
+}
+
+/* Streepje = gemiddelde */
+.bar em,
+.tick {
+    position: absolute;
+    top: -3px;
+    width: 2px;
+    height: 14px;
+    background: var(--ink);
+    border-radius: 1px;
+}
+
+.tick {
+    position: relative;
+    display: inline-block;
+    top: 2px;
+    margin-right: 4px;
+}
+
+.bars {
+    display: grid;
+    gap: 8px;
+}
+
+.bar-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 36px;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.bar-row b {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.note {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+/* ---------- Kaart-tab ---------- */
+
+.kaart {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    background: var(--bg);
+}
+
+#sidebar {
+    width: 350px;
+    flex: none;
+    background: var(--surface);
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.uitleg {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 10px 0;
+}
+
+.ramp {
+    height: 10px;
+    border-radius: 3px;
+}
+
+.ramp-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-top: 4px;
+}
+
+#ranking {
+    list-style: none;
+}
+
+#ranking button {
+    display: grid;
+    grid-template-columns: 120px 1fr 60px;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 5px 8px;
+    border-radius: 6px;
+    text-align: left;
+}
+
+#ranking button.hover {
+    background: var(--bg);
+}
+
+#ranking button.actief {
+    background: var(--card);
+    font-weight: 600;
+}
+
+#ranking b {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.terug {
+    color: var(--link);
+    font-weight: 700;
+    text-decoration: underline;
+    margin-bottom: 12px;
+}
+
+#detail h2 {
+    font-family: var(--kop);
+    font-weight: 400;
+    font-size: 26px;
+    color: var(--primary);
+}
+
+#detail .sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+#detail h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 18px 0 8px;
+}
+
+.tiles {
+    display: grid;
+    gap: 8px;
+}
+
+.tiles div {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    background: var(--card);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.tiles b {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 56px;
+}
+
+.tiles span {
+    font-size: 12px;
+    color: var(--ink-2);
+}
+
+#detail .bar-row {
+    grid-template-columns: 120px 1fr 28px;
+    font-size: 13px;
+}
+
+/* ---------- Kaart ---------- */
+
+#map {
+    position: relative;
+    flex: 1;
+    min-width: 0; /* anders houdt het canvas de kaart op de oude maat als hij kleiner wordt (volledig scherm uit, zijbalk terug) */
+    min-height: 0;
+    -webkit-user-select: none; /* dubbeltikken of lang drukken selecteert geen namen of knoppen */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+    overflow: clip; /* hidden laat zich nog verschuiven als een label buiten beeld focus krijgt */
+}
+
+#map canvas {
+    display: block;
+    touch-action: none;
+}
+
+#map canvas:focus-visible {
+    outline: 3px solid var(--link);
+    outline-offset: -3px;
+}
+
+#labels {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#leaders {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#leaders path {
+    fill: none;
+    stroke: var(--primary);
+    stroke-opacity: 0.5;
+    stroke-width: 1;
+}
+
+.label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1.3;
+    padding: 1px 6px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(4, 23, 45, 0.1);
+}
+
+.label b {
+    margin-left: 3px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.label.gedimd {
+    opacity: 0.45;
+}
+
+.label.hover {
+    border-color: var(--primary);
+    opacity: 1;
+}
+
+.label.actief {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    opacity: 1;
+    z-index: 1;
+}
+
+.label.actief b {
+    color: var(--geel);
+}
+
+[data-theme="dark"] .label.actief {
+    border-color: var(--geel);
+}
+
+.label:focus-visible {
+    opacity: 1;
+    z-index: 1;
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+}
+
+/* Voertuigen en de Rd4-wagen: naam alleen bij aanwijzen, toetsenbordfocus of selectie */
+.label.los:not(.actief, .hover, :focus-visible) {
+    opacity: 0;
+}
+
+/* Weergave en oog naast elkaar; draaien en de zijbalkknop eronder */
+.map-tools {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: start;
+    align-items: center;
+    gap: 8px;
+}
+
+#draai {
+    grid-area: 2 / 1;
+}
+
+#zijbalk-knoppen {
+    grid-area: 2 / 2;
+}
+
+/* Zijbalk in- en uitklappen (alleen op een groot scherm; op een telefoon staat hij onder de kaart). */
+@media (min-width: 761px) {
+    .zonder-zijbalk #sidebar {
+        display: none;
+    }
+}
+
+#zijbalk svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#zijbalk[aria-pressed="true"] {
+    background: var(--primary);
+    color: var(--surface);
+}
+
+/* Kaart schermvullend (telefoon): ook waar de browser geen volledig scherm kent. */
+.kaart-vol #map {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    height: auto;
+}
+
+.map-tools .pills {
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: 0 1px 4px rgba(4, 23, 45, 0.15);
+}
+
+.map-tools .pills button,
+.sim .pills button {
+    min-height: 44px; /* even hoog als de ronde knoppen */
+    background: none;
+}
+
+.map-tools .pills button[aria-pressed="true"],
+.sim .pills button[aria-pressed="true"] {
+    background: var(--primary);
+}
+
+.knoppen {
+    display: flex;
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: 0 1px 4px rgba(4, 23, 45, 0.15);
+}
+
+.knoppen button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 22px;
+    color: var(--primary);
+    display: grid;
+    place-items: center;
+}
+
+.knoppen button:active {
+    background: var(--bg);
+}
+
+#kompas svg {
+    width: 26px;
+    height: 26px;
+}
+
+/* Oog met streep = namen verbergen; zonder streep (ingedrukt) = namen weer tonen. */
+#namen svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#namen[aria-pressed="true"] {
+    background: var(--primary);
+    color: var(--surface);
+}
+
+#namen[aria-pressed="true"] .streep {
+    display: none;
+}
+
+/* Simulatie: afspelen, klok, tempo */
+.sim {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    background: var(--surface);
+    border-radius: 999px;
+    box-shadow: 0 1px 4px rgba(4, 23, 45, 0.15);
+}
+
+#sim-speel {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+}
+
+#sim-speel svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+#sim-speel[aria-pressed="true"] .speel,
+#sim-speel[aria-pressed="false"] .pauze {
+    display: none;
+}
+
+/* Volledig scherm: rechtsonder op de kaart (telefoon: rechtsboven, onderaan staan de kaartknoppen). */
+#volscherm {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 3;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    color: var(--primary);
+    box-shadow: 0 1px 4px rgba(4, 23, 45, 0.15);
+}
+
+#volscherm svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#volscherm[aria-pressed="true"] .groot,
+#volscherm[aria-pressed="false"] .klein {
+    display: none;
+}
+
+#sim-klok {
+    min-width: 3.2em;
+    text-align: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary);
+}
+
+/* ---------- Analyse-tab ---------- */
+
+.analyse {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--bg);
+}
+
+.analyse [data-id] {
+    cursor: pointer;
+}
+
+.hero {
+    position: relative;
+    padding: 36px max(24px, calc((100% - 1200px) / 2 + 24px));
+    background: linear-gradient(45deg, #002657, #019c90);
+    color: #fff;
+}
+
+.kicker {
+    color: var(--geel);
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.hero h1 {
+    font-family: var(--kop);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.15;
+}
+
+#afdrukken {
+    position: absolute;
+    right: max(24px, calc((100% - 1200px) / 2 + 24px));
+    bottom: 40px;
+    background: none;
+    color: #fff;
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.7);
+}
+
+#afdrukken:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.grid {
+    max-width: 1200px;
+    margin: 24px auto 40px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.breed {
+    grid-column: 1 / -1;
+}
+
+.grid > .kpis .kpi {
+    background: var(--surface);
+    padding: 14px 16px;
+}
+
+.grid > .kpis .kpi b {
+    font-size: 28px;
+}
+
+.card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 0;
+}
+
+.card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.card .sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 2px 0 18px;
+}
+
+.card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-2);
+    margin: 16px 0 8px;
+}
+
+.card h3:first-child {
+    margin-top: 0;
+}
+
+.scroll {
+    overflow-x: auto;
+}
+
+.inzichten {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    gap: 10px;
+}
+
+.inzicht {
+    display: grid;
+    align-content: start; /* een knop centreert anders verticaal */
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--card);
+    text-align: left;
+    font-size: 14px;
+    color: var(--ink-2);
+}
+
+.inzicht b {
+    display: block;
+    font-size: 24px;
+    color: var(--primary);
+}
+
+button.inzicht:hover {
+    box-shadow: inset 0 0 0 1.5px var(--primary);
+}
+
+svg text {
+    font-size: 12px;
+    fill: var(--ink);
+}
+
+svg .naam {
+    font-weight: 700;
+}
+
+svg .muted,
+svg .as {
+    fill: var(--muted);
+}
+
+.halo {
+    paint-order: stroke;
+    stroke: var(--surface);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+}
+
+.sankey .link {
+    fill-opacity: 0.35;
+    transition: fill-opacity 0.15s;
+}
+
+.sankey:hover .link {
+    fill-opacity: 0.15;
+}
+
+.sankey .link:hover {
+    fill-opacity: 0.7;
+}
+
+.sankey .knoop {
+    fill: var(--primary);
+}
+
+/* Vak rechtsboven: druk én lang */
+.scatter .druk {
+    fill: var(--link);
+    fill-opacity: 0.06;
+}
+
+.scatter .raster {
+    stroke: var(--line);
+}
+
+.scatter .gem {
+    stroke: var(--muted);
+}
+
+.scatter .punt {
+    fill: var(--link);
+    stroke: var(--surface);
+    stroke-width: 2;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+    padding: 7px 10px;
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line);
+}
+
+th:first-child,
+td:first-child {
+    text-align: left;
+}
+
+th {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    user-select: none;
+}
+
+th[aria-sort="descending"]::after {
+    content: " ↓";
+}
+
+th[aria-sort="ascending"]::after {
+    content: " ↑";
+}
+
+td.heat {
+    border-bottom-color: var(--surface);
+}
+
+tbody tr:hover td:not(.heat) {
+    background: var(--card);
+}
+
+#tip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    pointer-events: none;
+    max-width: 260px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--surface);
+    background: var(--ink);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(4, 23, 45, 0.25);
+}
+
+/* ---------- Lossen maar (spel achter de wagen op de kaart) ---------- */
+
+#spel {
+    -webkit-user-select: none;
+    user-select: none;
+    width: min(960px, 100% - 32px);
+    margin: auto;
+    padding: 20px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+}
+
+#spel[open] {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#spel::backdrop {
+    background: rgba(4, 23, 45, 0.6);
+}
+
+.spel-kop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.spel-kop h2 {
+    font-family: var(--kop);
+    font-weight: 400;
+    font-size: 26px;
+    color: var(--primary);
+}
+
+.sluit {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: var(--primary);
+}
+
+.sluit:hover {
+    background: var(--bg);
+}
+
+.spel-stand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--ink-2);
+}
+
+.spel-stand b {
+    font-size: 20px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Bij een volle rij krimpt de rij, niet de teller of de levens */
+.teller,
+.levens {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Record onder de teller, zodat de balk niet breder wordt */
+.teller small {
+    display: block;
+    font-size: 12px;
+}
+
+.teller small b {
+    font-size: 12px;
+    color: inherit;
+}
+
+/* Wachtrij bij de slagboom: lege plekken gestippeld */
+.rij {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.rij svg {
+    height: 18px;
+    width: auto;
+    min-width: 0;
+}
+
+.rij i {
+    width: 32px;
+    height: 12px;
+    border: 1.5px dashed var(--line);
+    border-radius: 3px;
+}
+
+.levens {
+    display: flex;
+    gap: 4px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--line);
+}
+
+.levens i::before {
+    content: "✕";
+    font-style: normal;
+}
+
+.levens i.kwijt {
+    color: #d03b3b;
+}
+
+/* Losplek: de lading boven, de weg met het voertuig onder, in het verloop van rd4.nl */
+.losplek {
+    position: relative;
+    height: 240px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #002657, #019c90);
+}
+
+.lading {
+    position: absolute;
+    top: 40px;
+    left: 12px;
+    right: 12px;
+    bottom: 84px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 8px;
+}
+
+.ding {
+    width: 78px;
+    padding: 6px 2px 5px;
+    display: grid;
+    justify-items: center;
+    gap: 1px;
+    border-radius: 10px;
+    background: #fff; /* spullen blijven "echt", ook in het donkere thema */
+    color: #04172d;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(4, 23, 45, 0.3);
+    touch-action: none;
+}
+
+.ding svg {
+    width: 48px;
+    height: 48px;
+}
+
+.ding[aria-pressed="true"] {
+    outline: 3px solid var(--geel);
+}
+
+.ding.sleept {
+    position: relative;
+    z-index: 3;
+    pointer-events: none;
+    box-shadow: 0 10px 24px rgba(4, 23, 45, 0.4);
+}
+
+.melding {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 12px;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.weg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 0 0 10px 10px;
+}
+
+/* Asfalt met onderbroken streep */
+.weg::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 26px;
+    background: linear-gradient(90deg, #cfd5dc 50%, transparent 0) center / 28px 2px repeat-x #3a3f46;
+}
+
+.voertuig {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    width: max-content;
+    margin: 0 auto;
+}
+
+.voertuig svg {
+    display: block;
+    height: 62px;
+    width: auto;
+}
+
+/* Containers: zijaanzicht van een open bak */
+.bakken {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.bak {
+    height: 64px;
+    padding: 8px 10px 4px;
+    display: grid;
+    place-items: center;
+    border-top: 5px solid var(--lichtblauw);
+    background: #0a366a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.15;
+    clip-path: polygon(0 0, 100% 0, 93% 100%, 7% 100%);
+}
+
+[data-theme="dark"] .bak {
+    background: #1c4f91;
+}
+
+.bak.onder {
+    background: var(--link);
+}
+
+.spel-kaart {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    width: min(400px, 100% - 24px);
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 22px;
+    text-align: center;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 8px 30px rgba(4, 23, 45, 0.3);
+}
+
+.spel-kaart h3 {
+    font-family: var(--kop);
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--primary);
+}
+
+.spel-kaart p {
+    font-size: 14px;
+    color: var(--ink-2);
+}
+
+.spel-score b {
+    font-size: 40px;
+    color: var(--primary);
+}
+
+.spel-kaart .spel-record {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.knop {
+    padding: 10px 26px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: var(--surface);
+    font-weight: 700;
+}
+
+.knop.stil {
+    padding: 4px;
+    background: none;
+    color: var(--link);
+    text-decoration: underline;
+}
+
+/* Spelkeuze: oneindig of dagopdracht */
+.modi {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.modus {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 16px 8px 14px;
+    border-radius: 12px;
+    background: var(--card);
+    color: var(--primary);
+}
+
+.modus:hover {
+    box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.modus svg {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 6px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.modus svg text {
+    font-size: 8px;
+    font-weight: 700;
+    fill: currentColor;
+    stroke: none;
+    text-anchor: middle;
+}
+
+.modus b {
+    font-size: 16px;
+}
+
+.modus span {
+    font-size: 13px;
+    color: var(--ink-2);
+}
+
+/* ---------- Smal scherm ---------- */
+
+@media (max-width: 760px) {
+    .topbar {
+        --rand: 16px;
+    }
+
+    .kaart,
+    .analyse {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .tabs {
+        margin-left: auto;
+    }
+
+    #thema {
+        margin-left: 0;
+    }
+
+    /* Spel schermvullend */
+    #spel {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        padding: max(12px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    }
+
+    .losplek {
+        flex: 1;
+        height: auto;
+        min-height: 290px;
+    }
+
+    .ding {
+        width: 76px;
+    }
+
+    .bakken {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .bak {
+        height: 54px;
+        font-size: 12px;
+    }
+
+    .kaart {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    #map {
+        order: -1;
+        flex: none;
+        height: max(340px, 90vw);
+    }
+
+    #sidebar {
+        width: auto;
+        overflow: visible;
+    }
+
+    .label {
+        font-size: 11px;
+        padding: 0 5px;
+    }
+
+    .sim {
+        top: 10px;
+        bottom: auto;
+        left: 10px;
+    }
+
+    #volscherm {
+        top: max(10px, env(safe-area-inset-top));
+        right: max(10px, env(safe-area-inset-right));
+        bottom: auto;
+    }
+
+    .kaart-vol .sim {
+        top: max(10px, env(safe-area-inset-top));
+        left: max(10px, env(safe-area-inset-left));
+    }
+
+    .kaart-vol .map-tools {
+        bottom: max(10px, env(safe-area-inset-bottom));
+    }
+
+    #zijbalk-knoppen {
+        display: none;
+    }
+
+    .map-tools {
+        top: auto;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        padding: 0 16px;
+    }
+
+    .card {
+        padding: 18px 16px;
+    }
+
+    .grid > .kpis {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    #afdrukken {
+        position: static;
+        margin-top: 14px;
+    }
+
+    .bar-row {
+        grid-template-columns: 120px 1fr 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar .titel {
+        display: none;
+    }
+}
+
+/* ---------- Afdrukken of PDF: de analyse, licht, één kolom (zie grafieken.js) ---------- */
+
+.afdruk .grid {
+    display: block;
+    width: 680px;
+    margin: 0;
+    padding: 0;
+}
+
+.afdruk .grid > * {
+    margin-bottom: 12px;
+}
+
+@media print {
+    @page {
+        margin: 12mm;
+    }
+
+    html,
+    body {
+        display: block;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .topbar,
+    #tab-kaart,
+    #afdrukken,
+    #tip,
+    #spel {
+        display: none !important;
+    }
+
+    .analyse {
+        overflow: visible;
+        background: #fff;
+    }
+
+    .hero {
+        width: 680px;
+        padding: 20px 24px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    /* Niets breder dan het papier, anders verkleint de printer alles */
+    .sankey {
+        max-width: 100%;
+        height: auto;
+    }
+
+    table {
+        font-size: 10.5px;
+    }
+
+    th,
+    td {
+        padding: 4px 3px;
+    }
+
+    th {
+        white-space: normal;
+        vertical-align: bottom;
+    }
+
+    .grid > * {
+        break-inside: avoid;
+    }
+
+    .card,
+    .grid > .kpis .kpi {
+        border: 1px solid var(--line);
+    }
+
+    .scroll {
+        overflow: visible;
+    }
+}

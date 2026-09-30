@@ -1,0 +1,9 @@
+{
+    "name": "Rd4 Grondstoffenpark Heerlen",
+    "short_name": "Rd4 Park",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#04172d",
+    "theme_color": "#04172d",
+    "icons": [{ "src": "img/logord4.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }]
+}

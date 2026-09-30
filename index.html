@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#04172d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Rd4 Park">
+    <link rel="apple-touch-icon" href="img/logord4.png">
+    <title>Rd4 Grondstoffenpark Heerlen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/logord4.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Thema zetten vóór het tekenen (anders flitst eerst de lichte versie): eigen keuze, anders die van de browser.
+        try { var thema = localStorage.getItem('rd4-thema'); } catch (e) {}
+        document.documentElement.dataset.theme = thema || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="merk" href="https://www.google.com/maps/search/?api=1&amp;query=Rd4+Grondstoffenpark+Heerlen%2C+Huisbergerstraat+250%2C+Heerlen" target="_blank" rel="noopener" title="Google Maps">
+            <img src="img/logord4.png" alt="Rd4">
+            <span class="titel">Grondstoffenpark Heerlen</span>
+        </a>
+        <nav class="tabs" role="tablist">
+            <button role="tab" data-tab="kaart" aria-selected="true">Kaart</button>
+            <button role="tab" data-tab="analyse" aria-selected="false">Analyse</button>
+        </nav>
+        <button id="thema" aria-label="Donkere modus" aria-pressed="false">
+            <svg viewBox="0 0 24 24"><path class="maan" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /><g class="zon"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></g></svg>
+        </button>
+    </header>
+
+    <main id="tab-kaart" class="kaart">
+        <aside id="sidebar">
+            <section class="kpis" id="kpis"></section>
+
+            <section>
+                <div class="pills" id="metric-toggle"></div>
+                <p class="uitleg" id="metric-uitleg"></p>
+                <div id="legend"></div>
+            </section>
+
+            <section id="overzicht">
+                <ol id="ranking"></ol>
+            </section>
+
+            <section id="detail" aria-live="polite" hidden></section>
+        </aside>
+
+        <div id="map">
+            <div id="labels"><svg id="leaders"><path /></svg></div>
+            <div class="map-tools">
+                <div class="pills" id="view-toggle">
+                    <button data-view="schuin" aria-pressed="true">3D</button>
+                    <button data-view="boven" aria-pressed="false">Boven</button>
+                </div>
+                <div class="knoppen">
+                    <button id="namen" aria-pressed="false" aria-label="Namen verbergen">
+                        <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /><path class="streep" d="M4 4l16 16" /></svg>
+                    </button>
+                </div>
+                <div class="knoppen" id="zijbalk-knoppen">
+                    <button id="zijbalk" aria-pressed="false" aria-label="Zijbalk verbergen">
+                        <svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" /><path d="M9 5v14" /></svg>
+                    </button>
+                </div>
+                <div class="knoppen" id="draai">
+                    <button data-draai="-45" aria-label="Linksom draaien">↺</button>
+                    <button id="kompas" aria-label="Noorden boven">
+                        <svg viewBox="-10 -10 20 20"><path d="M0-8 3 0h-6z" fill="#d03b3b" /><path d="M0 8 3 0h-6z" fill="#8bacd2" /></svg>
+                    </button>
+                    <button data-draai="45" aria-label="Rechtsom draaien">↻</button>
+                </div>
+            </div>
+            <button id="volscherm" aria-pressed="false" aria-label="Volledig scherm">
+                <svg viewBox="0 0 24 24"><path class="groot" d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /><path class="klein" d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" /></svg>
+            </button>
+            <div class="sim" id="sim">
+                <button id="sim-speel" aria-pressed="false" aria-label="Afspelen">
+                    <svg viewBox="0 0 24 24"><path class="speel" d="M8 5.5v13l10.5-6.5z" /><path class="pauze" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg>
+                </button>
+                <span id="sim-klok">9:00</span>
+                <div class="pills" id="sim-tempo">
+                    <button data-tempo="10" aria-pressed="false">10×</button>
+                    <button data-tempo="30" aria-pressed="true">30×</button>
+                    <button data-tempo="90" aria-pressed="false">90×</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="tab-analyse" class="analyse" hidden>
+        <section class="hero">
+            <p class="kicker">bezoekersmeting</p>
+            <h1>Analyse grondstoffenpark</h1>
+            <button id="afdrukken" class="knop">Afdrukken of PDF</button>
+        </section>
+
+        <div class="grid">
+            <section class="kpis breed" id="analyse-kpis"></section>
+
+            <article class="card breed">
+                <h2>Opvallend</h2>
+                <p class="sub">Op de meetdag</p>
+                <div class="inzichten" id="inzichten"></div>
+            </article>
+
+            <article class="card breed">
+                <h2>Van voertuig naar afvalstroom</h2>
+                <p class="sub">Breedte = aantal containerbezoeken. Eén voertuig kan meerdere containers bezoeken.</p>
+                <div class="scroll"><div id="sankey"></div></div>
+            </article>
+
+            <article class="card">
+                <h2>Waar ontstaat oponthoud?</h2>
+                <p class="sub">Bezoeken tegen gemiddelde verblijfstijd per stroom.</p>
+                <div id="scatter"></div>
+            </article>
+
+            <article class="card">
+                <h2>Per voertuigtype</h2>
+                <p class="sub">Aandeel bezoekers en aantal containers per bezoek.</p>
+                <div id="voertuigen"></div>
+            </article>
+
+            <article class="card breed">
+                <h2>Alle stromen</h2>
+                <div class="scroll" id="tabel"></div>
+            </article>
+        </div>
+    </main>
+
+    <div id="tip" hidden></div>
+
+    <dialog id="spel" aria-labelledby="spel-titel">
+        <header class="spel-kop">
+            <h2 id="spel-titel">Lossen maar</h2>
+            <button class="sluit" data-actie="sluit" aria-label="Sluiten">✕</button>
+        </header>
+        <div class="spel-stand">
+            <span class="teller">Geholpen <b id="spel-geholpen">0</b><small><span id="spel-record-soort">Record</span> <b id="spel-record">0</b></small></span>
+            <span class="rij" id="spel-rij" title="Wachtrij bij de slagboom"></span>
+            <span class="levens" id="spel-levens"></span>
+        </div>
+        <div class="losplek">
+            <div class="lading" id="lading"></div>
+            <p class="melding" id="melding"></p>
+            <div class="weg" id="weg"><div class="voertuig" id="voertuig"></div></div>
+        </div>
+        <div class="bakken" id="bakken"></div>
+        <div class="spel-kaart" id="spel-kaart"></div>
+    </dialog>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="grafieken.js"></script>
+    <script src="spel.js"></script>
+    <script src="sim.js"></script>
+    <script src="omgeving.js"></script>
+</body>
+</html>
